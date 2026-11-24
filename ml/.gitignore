@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Datasets, landmarks and model artefacts are never committed
+data/*
+!data/.gitkeep
+artifacts/*
+!artifacts/.gitkeep
+*.tflite
+*.npz
+*.npy
+*.mp4
+*.zip

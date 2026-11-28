@@ -8,3 +8,4 @@ CLAUDE.md
 ml/data/
 ml/models/
 ml/.venv/
+backend/content/media/**/*.mp4

@@ -18,6 +18,8 @@ from ishara_ml.nsl23 import find_video
 EXPECTED_COUNT = 49
 SLUG_RE = re.compile(r"^[a-z0-9_]+$")
 CSV_COLUMNS = ["slug", "glyph", "nsl23_label", "signer", "file", "start", "end"]
+OPTIONAL_COLUMNS = ["style"]  # keypose | photo (empty or legacy "toon" = keypose); illustrated = the old drawing
+STYLE_VALUES = {"", "keypose", "toon", "photo", "illustrated"}
 
 
 def check_signs(signs_path: Path) -> tuple[list[str], dict[str, str]]:
@@ -50,8 +52,9 @@ def check_map(csv_path: Path, glyphs: dict[str, str]) -> tuple[list[str], list[d
     errors: list[str] = []
     with csv_path.open(encoding="utf-8", newline="") as fh:
         reader = csv.DictReader(fh)
-        if reader.fieldnames != CSV_COLUMNS:
-            errors.append(f"{csv_path.name}: columns {reader.fieldnames} != {CSV_COLUMNS}")
+        cols = list(reader.fieldnames or [])
+        if cols[: len(CSV_COLUMNS)] != CSV_COLUMNS or not set(cols[len(CSV_COLUMNS) :]) <= set(OPTIONAL_COLUMNS):
+            errors.append(f"{csv_path.name}: columns {cols} != {CSV_COLUMNS} (+ optional {OPTIONAL_COLUMNS})")
         rows = list(reader)
 
     csv_slugs = [r["slug"] for r in rows]
@@ -65,6 +68,10 @@ def check_map(csv_path: Path, glyphs: dict[str, str]) -> tuple[list[str], list[d
     for r in rows:
         if r["slug"] in glyphs and r["glyph"] != glyphs[r["slug"]]:
             errors.append(f"{csv_path.name}: {r['slug']}: glyph {r['glyph']!r} != signs.json {glyphs[r['slug']]!r}")
+        if (r.get("style") or "").strip() not in STYLE_VALUES:
+            errors.append(
+                f"{csv_path.name}: {r['slug']}: style {r.get('style')!r} not in {sorted(STYLE_VALUES - {''})}"
+            )
         for col in ("nsl23_label", "signer", "file"):
             if not r[col].strip():
                 errors.append(f"{csv_path.name}: {r['slug']}: empty {col}")

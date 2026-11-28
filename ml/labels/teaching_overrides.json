@@ -1,0 +1,11 @@
+{
+  "_doc": "Manual corrections for the teaching-media pipeline, only where MediaPipe's hand landmarks are known to be wrong. Checked by a person against the NSL23 video. fold/raise: fingers to draw folded into the fist / raised on their own.",
+  "tta": {
+    "fold": [
+      "middle",
+      "ring",
+      "pinky"
+    ],
+    "reason": "S2_TA.MOV (and S1_TA.MOV before it): middle, ring and pinky are bent towards the camera, but MediaPipe reports them nearly straight (tip-to-palm 1.2-1.6 hand sizes), so they were drawn raised and jittered. Reviewed against the video."
+  }
+}

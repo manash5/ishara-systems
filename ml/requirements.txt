@@ -1,5 +1,8 @@
-# Phase-1 teaching-media pipeline deps (pinned to the versions in ml/.venv).
+# Teaching-media pipeline deps (pinned to the versions in ml/.venv).
 # ml/ is managed by uv: pyproject.toml + uv.lock are the full lock; this file is a convenience pin.
+imageio-ffmpeg==0.8.1
 mediapipe==1.2.3
 numpy==2.5.5
+onnxruntime==1.32.0
 pillow==13.0.0
+rembg[cpu]==2.0.88
